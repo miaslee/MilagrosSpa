@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main_pink"
+    tools:context=".ReprogramarCitaActivity">
+
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarReprogramar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:title="Reprogramar cita"
+        app:titleCentered="true"
+        app:titleTextColor="@android:color/white"
+        app:backgroundTint="#E91E63"
+        app:navigationIcon="@drawable/ic_arrow_back_24" />
+
+    <!-- Pull-to-refresh para recargar disponibilidad -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeReprogramar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Indicaciones -->
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Elige nueva fecha"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                    android:textColor="#AD1457" />
+
+                <!-- Calendario -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp">
+
+                    <CalendarView
+                        android:id="@+id/calendarEdit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Encabezado disponibilidad -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    >
+
+
+
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvNuevaFechaTitulo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Horarios disponibles"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                        android:textColor="#AD1457" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvLastUpdateEdit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Actualizado ahora"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
+                </LinearLayout>
+
+                <!-- Progreso de carga -->
+                <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:id="@+id/progressSlotsEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:visibility="gone"
+                    app:indicatorColor="#E91E63"
+                    app:trackColor="#F8BBD0" />
+
+                <!-- Chips de horarios (se llenan en runtime) -->
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupSlotsEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    app:singleLine="false">
+
+                    <!-- Solo para preview -->
+                    <com.google.android.material.chip.Chip
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10:00"
+                        tools:visibility="visible" />
+                    <com.google.android.material.chip.Chip
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10:30"
+                        tools:visibility="visible" />
+                    <com.google.android.material.chip.Chip
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="11:00"
+                        tools:visibility="visible" />
+                </com.google.android.material.chip.ChipGroup>
+
+                <!-- Mensajes / estado -->
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvEstadoReprogramar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text=""
+                    android:textAlignment="center"
+                    android:textColor="?attr/colorError"
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                    tools:text="No hay horarios disponibles para esta fecha" />
+
+                <!-- Acciones -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnGuardarCambios"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="12dp"
+                    android:text="Guardar cambios"
+                    android:textAllCaps="false"
+                    android:enabled="false"
+                    app:cornerRadius="14dp"
+                    app:backgroundTint="#E91E63" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCancelarCita"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Cancelar cita"
+                    android:textAllCaps="false"
+                    app:cornerRadius="14dp" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

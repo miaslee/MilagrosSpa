@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Nombre del servicio -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvServicioNombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="#AD1457"
+            tools:text="Limpieza Facial Premium" />
+
+        <!-- Categoría como chip -->
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipCategoria"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Facial"
+            app:chipIcon="@drawable/ic_category_24"
+            app:chipIconTint="#E91E63"
+            app:chipIconSize="18dp"
+            app:iconStartPadding="6dp"
+            app:chipMinHeight="32dp" />
+
+        <!-- Fila: duración y precio -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <!-- Duración -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_time_24"
+                    android:tint="#AD1457"
+                    android:contentDescription="@null"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvServicioDuracion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    tools:text="60 min" />
+            </LinearLayout>
+
+            <!-- Precio -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center_vertical|end">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_money_24"
+                    android:tint="#AD1457"
+                    android:contentDescription="@null"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvServicioPrecio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    tools:text="S/ 80.00" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Descripción breve (opcional) -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvServicioDescripcion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:maxLines="3"
+            android:ellipsize="end"
+            tools:text="Limpieza profunda con exfoliación y mascarilla hidratante para revitalizar tu piel."/>
+
+        <!-- Botón: iniciar agendado -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAgendarServicio"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="10dp"
+            android:text="Agendar"
+            android:textAllCaps="false"
+            app:cornerRadius="12dp"
+            app:backgroundTint="#E91E63"
+            app:icon="@drawable/ic_calendar_24"
+            app:iconPadding="8dp"
+            app:iconGravity="textStart" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

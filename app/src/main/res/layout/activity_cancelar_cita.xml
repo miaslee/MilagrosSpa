@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main_pink"
+    tools:context=".CancelarCitaActivity">
+
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarCancelar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:title="Cancelar cita"
+        app:titleCentered="true"
+        app:titleTextColor="@android:color/white"
+        app:backgroundTint="#E91E63"
+        app:navigationIcon="@drawable/ic_arrow_back_24" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Aviso -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:background="@android:color/transparent">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_warning_24"
+                    android:contentDescription="@null"
+                    app:tint="#E91E63" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvCancelarAviso"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="Esta acción no se puede deshacer."
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+            </LinearLayout>
+
+            <!-- Resumen de la cita -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvCanServicio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="#AD1457"
+                        tools:text="Limpieza Facial Premium" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvCanFechaHora"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        tools:text="Lun 07 Oct • 10:30" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvCanProfesional"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:text="Con Ana" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Motivo (opcional) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilMotivoCancel"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Motivo (opcional)"
+                app:boxBackgroundMode="outline"
+                app:startIconDrawable="@drawable/ic_edit_24"
+                app:boxCornerRadiusTopStart="14dp"
+                app:boxCornerRadiusTopEnd="14dp"
+                app:boxCornerRadiusBottomStart="14dp"
+                app:boxCornerRadiusBottomEnd="14dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editMotivoCancelacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:minLines="2"
+                    android:maxLines="4"
+                    tools:text="No podré asistir por un imprevisto." />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Políticas de cancelación -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvPoliticasTitulo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Políticas de cancelación"
+                        android:textStyle="bold"
+                        android:textColor="#AD1457"
+                        android:textSize="16sp" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvPolitica1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        tools:text="• Sin cargo si cancelas con 24 h de anticipación." />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvPolitica2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:text="• 50% del servicio si cancelas entre 24 h y 6 h antes." />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvPolitica3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:text="• 100% del servicio si cancelas con menos de 6 h." />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Aceptación -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <CheckBox
+                    android:id="@+id/checkAceptarPoliticas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvAceptarPoliticas"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:text="Acepto las políticas de cancelación" />
+            </LinearLayout>
+
+            <!-- Progreso -->
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progressCancelar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                app:indicatorColor="#E91E63"
+                app:trackColor="#F8BBD0" />
+
+            <!-- Mensajes -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/textStatusCancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="?attr/colorError"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                tools:text="Tu cita fue cancelada con éxito." />
+
+            <!-- Botones -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnConfirmarCancelacion"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="12dp"
+                android:text="Confirmar cancelación"
+                android:textAllCaps="false"
+                android:enabled="false"
+                app:cornerRadius="14dp"
+                app:backgroundTint="#E91E63"
+                app:icon="@drawable/ic_close_24"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMantenerCita"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:text="Mantener cita"
+                android:textAllCaps="false"
+                app:cornerRadius="14dp" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

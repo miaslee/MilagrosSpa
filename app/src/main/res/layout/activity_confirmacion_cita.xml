@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main_pink">
+
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarConfirmacion"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:title="Confirmación"
+        app:titleCentered="true"
+        app:titleTextColor="@android:color/white"
+        app:backgroundTint="#E91E63"
+        app:navigationIcon="@drawable/ic_arrow_back_24"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="24dp">
+
+            <!-- Icono éxito -->
+            <ImageView
+                android:id="@+id/imgSuccess"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:src="@drawable/ic_success_72"
+                android:contentDescription="@null"
+                android:layout_marginTop="12dp"
+                app:tint="#E91E63" />
+
+            <!-- Título -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvConfirmTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¡Cita confirmada!"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                android:textColor="#AD1457"
+                android:layout_marginTop="8dp"/>
+
+            <!-- Subtítulo -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvConfirmSub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Te enviamos un correo con los detalles."
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                android:layout_marginTop="4dp"
+                android:textAlignment="center"/>
+
+            <!-- Tarjeta de detalle -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Servicio -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_services_24"
+                            android:contentDescription="@null"
+                            app:tint="#AD1457" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvConfServicio"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            tools:text="Facial Premium"/>
+                    </LinearLayout>
+
+                    <!-- Fecha y hora -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="8dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_calendar_24"
+                            android:contentDescription="@null"
+                            app:tint="#AD1457" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvConfFechaHora"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            tools:text="Lun 07 Oct • 10:30"/>
+                    </LinearLayout>
+
+                    <!-- Profesional (opcional) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="8dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_person_24"
+                            android:contentDescription="@null"
+                            app:tint="#AD1457" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvConfProfesional"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            tools:text="Con Ana"/>
+                    </LinearLayout>
+
+                    <!-- Ubicación (opcional) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="8dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_location_24"
+                            android:contentDescription="@null"
+                            app:tint="#AD1457" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvConfUbicacion"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            tools:text="Av. Siempre Viva 123"/>
+                    </LinearLayout>
+
+                    <!-- Código de reserva -->
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipCodigoReserva"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Código: ABC123"
+                        app:chipIcon="@drawable/ic_check_small_24"
+                        app:chipIconTint="#E91E63"
+                        app:chipIconSize="18dp"
+                        app:iconStartPadding="6dp"/>
+
+                    <!-- Acciones secundarias -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="end"
+                        android:layout_marginTop="8dp">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCompartir"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:text="Compartir"
+                            app:icon="@drawable/ic_share_24"
+                            app:iconGravity="textStart"
+                            app:iconPadding="8dp"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDescargarComprobante"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:text="Descargar"
+                            app:icon="@drawable/ic_download_24"
+                            app:iconGravity="textStart"
+                            app:iconPadding="8dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Acciones principales -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOpenMyAppointments"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:text="Ver mis citas"
+                android:textAllCaps="false"
+                app:cornerRadius="14dp"
+                app:backgroundTint="#E91E63"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddToCalendar"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:text="Añadir a Google Calendar"
+                android:textAllCaps="false"
+                app:cornerRadius="14dp"
+                app:icon="@drawable/ic_calendar_24"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
