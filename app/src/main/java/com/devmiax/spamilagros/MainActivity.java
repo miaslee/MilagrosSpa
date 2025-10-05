@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.appbar.MaterialToolbar;
+
 public class MainActivity extends AppCompatActivity {
 
     private void nav(int viewId, Class<?> target) {
@@ -15,6 +17,9 @@ public class MainActivity extends AppCompatActivity {
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MaterialToolbar toolbar = findViewById(R.id.topAppBar);
+        setSupportActionBar(toolbar);
 
         nav(R.id.btnGoToAgenda,         AgendaActivity.class);
         nav(R.id.btnGoToMyAppointments, misCitas.class);

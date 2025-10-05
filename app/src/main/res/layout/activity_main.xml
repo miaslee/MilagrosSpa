@@ -9,20 +9,28 @@
     tools:context=".MainActivity">
 
     <!-- AppBar / Toolbar -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/topAppBar"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:title="MILAGROSSPA"
-        app:titleCentered="true"
-        app:titleTextColor="@android:color/white"
-        app:backgroundTint="#E91E63"
-        app:navigationIcon="@drawable/ic_menu_24" />
+        android:layout_height="wrap_content"
+        app:elevation="8dp"
+        android:background="@color/toolbar">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:title="MILAGROSSPA"
+            app:titleCentered="true"
+            app:titleTextColor="@android:color/white"
+
+            tools:ignore="HardcodedText" />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Contenido desplazable -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
         android:layout_marginTop="?attr/actionBarSize"
         android:fillViewport="true">
 

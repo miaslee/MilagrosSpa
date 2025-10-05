@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "691136398187",
+    "project_id": "milagrosspa-3e358",
+    "storage_bucket": "milagrosspa-3e358.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:691136398187:android:02cffc48c51aeb49b0022e",
+        "android_client_info": {
+          "package_name": "com.devmiax.spamilagros"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgXeKZpofWX4TEWANVkZSd7MOxgH2CByk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

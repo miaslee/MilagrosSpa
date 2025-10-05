@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main_pink"
+    tools:context=".Admin">
+
+  <!-- AppBar / Toolbar -->
+  <com.google.android.material.appbar.AppBarLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:elevation="8dp"
+      android:background="@color/toolbar">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarAdmin"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:title="MILAGROSSPA"
+        app:titleCentered="true"
+        app:titleTextColor="@android:color/white"
+
+        tools:ignore="HardcodedText" />
+  </com.google.android.material.appbar.AppBarLayout>
+
+  <!-- Contenido -->
+  <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+      android:id="@+id/swipeAdmin"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+      <!-- Buscador -->
+      <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/tilBuscar"
+          style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+          android:hint="Buscar servicio"
+          app:startIconDrawable="@drawable/ic_search_24"
+          app:boxBackgroundMode="outline"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          app:boxCornerRadiusTopStart="14dp"
+          app:boxCornerRadiusTopEnd="14dp"
+          app:boxCornerRadiusBottomStart="14dp"
+          app:boxCornerRadiusBottomEnd="14dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editBuscar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:imeOptions="actionSearch"/>
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <!-- Filtro por categorías -->
+      <HorizontalScrollView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="12dp"
+          android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupAdmin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleSelection="false"
+            app:singleLine="true">
+          <!-- chips dinámicos en runtime -->
+        </com.google.android.material.chip.ChipGroup>
+      </HorizontalScrollView>
+
+      <!-- Barra de progreso -->
+      <com.google.android.material.progressindicator.LinearProgressIndicator
+          android:id="@+id/progressAdmin"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="6dp"
+          android:visibility="gone"
+          app:indicatorColor="#E91E63"
+          app:trackColor="#F8BBD0" />
+
+      <!-- Lista -->
+      <androidx.recyclerview.widget.RecyclerView
+          android:id="@+id/rvAdminServicios"
+          android:layout_width="match_parent"
+          android:layout_height="0dp"
+          android:layout_weight="1"
+          android:layout_marginTop="8dp"
+          tools:listitem="@layout/item_servicio_admin"/>
+    </LinearLayout>
+  </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+  <!-- FAB Crear servicio -->
+  <com.google.android.material.floatingactionbutton.FloatingActionButton
+      android:id="@+id/fabCrearServicio"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:contentDescription="add"
+      app:srcCompat="@drawable/ic_add_24"
+      app:backgroundTint="#E91E63"
+      app:borderWidth="0dp"
+      app:tint="@android:color/white"
+      app:layout_anchorGravity="bottom|end"
+      android:layout_margin="20dp"
+      app:layout_anchor="@id/swipeAdmin"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

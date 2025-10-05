@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:padding="24dp">
+            android:padding="4dp">
 
 
 
@@ -28,6 +28,7 @@
                 android:text="Registro"
                 android:textStyle="bold"
                 android:textSize="22sp"
+                android:layout_marginTop="50dp"
                 android:textColor="#C2185B"
                 android:letterSpacing="0.02" />
 
@@ -35,7 +36,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginBottom="12dp"
                 app:cardCornerRadius="20dp"
                 app:cardUseCompatPadding="true"
@@ -51,7 +52,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilName"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        android:hint="Nombre y apellido"
+                        android:hint="Nombres"
                         app:boxBackgroundMode="outline"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -62,12 +63,34 @@
                         app:boxCornerRadiusBottomEnd="14dp">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editName"
+                            android:id="@+id/Name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textPersonName"
                             android:maxLines="1" />
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilLasName"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:hint="apellidos"
+                        app:boxBackgroundMode="outline"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:startIconDrawable="@drawable/ic_user_24"
+                        app:boxCornerRadiusTopStart="14dp"
+                        app:boxCornerRadiusTopEnd="14dp"
+                        app:boxCornerRadiusBottomStart="14dp"
+                        app:boxCornerRadiusBottomEnd="14dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/LastName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPersonName"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
 
                     <!-- Correo -->
                     <com.google.android.material.textfield.TextInputLayout
@@ -87,7 +110,7 @@
                         app:boxCornerRadiusBottomEnd="14dp">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editEmail"
+                            android:id="@+id/Email"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textEmailAddress"
@@ -111,7 +134,7 @@
                         app:boxCornerRadiusBottomEnd="14dp">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editPhone"
+                            android:id="@+id/Phone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="phone"
@@ -135,7 +158,7 @@
                         app:boxCornerRadiusBottomEnd="14dp">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editPassword"
+                            android:id="@+id/Password"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textPassword"
@@ -159,7 +182,7 @@
                         app:boxCornerRadiusBottomEnd="14dp">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editPasswordConfirm"
+                            android:id="@+id/PasswordConfirm"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textPassword"
