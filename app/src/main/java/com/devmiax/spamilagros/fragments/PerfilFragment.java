@@ -1,4 +1,4 @@
-package com.devmiax.spamilagros;
+package com.devmiax.spamilagros.fragments;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -6,45 +6,54 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
+import com.devmiax.spamilagros.LoginActivity;
+import com.devmiax.spamilagros.R;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.*;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+import com.squareup.picasso.Picasso;
 
-import com.squareup.picasso.Picasso; // opcional (si agregaste la dependencia)
-
-import java.io.*;
-import java.text.NumberFormat;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.*;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
-public class PerfilActivity extends AppCompatActivity {
+public class PerfilFragment extends Fragment {
 
     // UI
-    private MaterialToolbar toolbar;
     private ImageView imgAvatar;
     private MaterialButton btnCambiarFoto, btnGuardar, btnLogout;
     private TextInputEditText etNombre, etTelefono;
     private TextView tvNombreCabecera, tvCorreoCabecera;
-
 
     // Firebase
     private FirebaseAuth auth;
@@ -54,9 +63,9 @@ public class PerfilActivity extends AppCompatActivity {
     private OkHttpClient http;
 
     // Estado
-    private Uri avatarUriLocal;      // seleccionado por el usuario
-    private String avatarUrlRemoto;  // guardado en Firestore
-    private String userDocId;        // = uid
+    private Uri avatarUriLocal;
+    private String avatarUrlRemoto;
+    private String userDocId;
 
     private final ActivityResultLauncher<String> pickImage =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
@@ -66,66 +75,56 @@ public class PerfilActivity extends AppCompatActivity {
                 }
             });
 
+    @Nullable
     @Override
-    protected void onCreate(@Nullable Bundle b) {
-        super.onCreate(b);
-        setContentView(R.layout.activity_perfil);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
-        // Bind
-        toolbar      = findViewById(R.id.toolbarPerfil);
-        imgAvatar    = findViewById(R.id.imgAvatar);
-        btnCambiarFoto = findViewById(R.id.btnCambiarFoto);
-        etNombre     = findViewById(R.id.editNombrePerfil);
-        etTelefono   = findViewById(R.id.editTelefonoPerfil);
+        View view = inflater.inflate(R.layout.fragment_perfil, container, false);
 
-        btnGuardar   = findViewById(R.id.btnGuardarPerfil);
-        tvNombreCabecera = findViewById(R.id.tvNombreCabecera);
-        tvCorreoCabecera = findViewById(R.id.tvCorreoCabecera);
+        // Bind de vistas
+        imgAvatar = view.findViewById(R.id.imgAvatar);
+        btnCambiarFoto = view.findViewById(R.id.btnCambiarFoto);
+        etNombre = view.findViewById(R.id.editNombrePerfil);
+        etTelefono = view.findViewById(R.id.editTelefonoPerfil);
+        btnGuardar = view.findViewById(R.id.btnGuardarPerfil);
+        tvNombreCabecera = view.findViewById(R.id.tvNombreCabecera);
+        tvCorreoCabecera = view.findViewById(R.id.tvCorreoCabecera);
+        btnLogout = view.findViewById(R.id.btnCerrarSesion);
 
-        btnLogout    = findViewById(R.id.btnCerrarSesion);
-
-
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(v -> finish());
-
+        // Inicializar Firebase y HTTP
         auth = FirebaseAuth.getInstance();
-        db   = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
         http = new OkHttpClient.Builder()
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .readTimeout(40, TimeUnit.SECONDS)
                 .writeTimeout(40, TimeUnit.SECONDS)
                 .build();
 
-        // Verifica sesión
+        // Verificar sesión
         FirebaseUser u = auth.getCurrentUser();
         if (u == null) {
-            startActivity(new Intent(this, LoginActivity.class)
+            startActivity(new Intent(requireContext(), LoginActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-            finish();
-            return;
+            requireActivity().finish();
+            return view;
         }
         userDocId = u.getUid();
-
 
         // Listeners
         btnCambiarFoto.setOnClickListener(v -> pickImage.launch("image/*"));
         btnGuardar.setOnClickListener(v -> onGuardar());
-
         btnLogout.setOnClickListener(v -> {
             auth.signOut();
-            startActivity(new Intent(this, LoginActivity.class)
+            startActivity(new Intent(requireContext(), LoginActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-            finish();
+            requireActivity().finish();
         });
 
-        // Carga datos
+        // Cargar datos del perfil
         cargarPerfil();
 
-        //nav
-
-
-
-
+        return view;
     }
 
     // ------------------------ CARGA PERFIL ------------------------
@@ -135,24 +134,26 @@ public class PerfilActivity extends AppCompatActivity {
                 .addOnSuccessListener(d -> {
                     setLoading(false);
                     if (d.exists()) {
-                        String nombre  = d.getString("nombre");
-                        String tel     = d.getString("telefono");
-                        String mail     = d.getString("correo");
-                        avatarUrlRemoto= d.getString("avatarUrl");
-                        etNombre.setText(nombre);
+                        String nombre = d.getString("nombre");
+                        String tel = d.getString("telefono");
+                        String mail = d.getString("correo");
+                        avatarUrlRemoto = d.getString("avatarUrl");
 
+                        etNombre.setText(nombre);
+                        etTelefono.setText(tel);
                         tvNombreCabecera.setText(nombre);
                         tvCorreoCabecera.setText(mail);
-                        etTelefono.setText(tel);
 
                         if (!TextUtils.isEmpty(avatarUrlRemoto)) {
-                            try { Picasso.get().load(avatarUrlRemoto).placeholder(R.drawable.ic_person_24).into(imgAvatar); }
-                            catch (Throwable ignore) {}
+                            try {
+                                Picasso.get()
+                                        .load(avatarUrlRemoto)
+                                        .placeholder(R.drawable.ic_person_24)
+                                        .into(imgAvatar);
+                            } catch (Throwable ignore) {}
                         }
                     } else {
-                        // crea doc básico si no existe
-                        Map<String,Object> base = new HashMap<>();
-
+                        Map<String, Object> base = new HashMap<>();
                         base.put("rol", "cliente");
                         db.collection("users").document(userDocId).set(base);
                     }
@@ -163,13 +164,15 @@ public class PerfilActivity extends AppCompatActivity {
     // ------------------------ GUARDAR CAMBIOS ------------------------
     private void onGuardar() {
         String nombre = safeText(etNombre);
-        String tel    = safeText(etTelefono);
+        String tel = safeText(etTelefono);
 
-        if (nombre.isEmpty()) { toast("Ingresa tu nombre"); return; }
+        if (nombre.isEmpty()) {
+            toast("Ingresa tu nombre");
+            return;
+        }
 
         setLoading(true);
 
-        // Si eligió nueva foto → sube primero, luego guarda doc
         if (avatarUriLocal != null) {
             subirAvatarRaw(avatarUriLocal, new UploadCb() {
                 @Override public void ok(String url) {
@@ -187,7 +190,7 @@ public class PerfilActivity extends AppCompatActivity {
     }
 
     private void guardarDocPerfil(String nombre, String tel, @Nullable String avatarUrl) {
-        Map<String,Object> up = new HashMap<>();
+        Map<String, Object> up = new HashMap<>();
         up.put("nombre", nombre);
         up.put("telefono", tel);
         if (avatarUrl != null) up.put("avatarUrl", avatarUrl);
@@ -204,10 +207,7 @@ public class PerfilActivity extends AppCompatActivity {
                 });
     }
 
-    // ------------------------ RESET PASSWORD ------------------------
-
-
-    // ------------------------ SUBIDA AVATAR RAW (upload.php) ------------------------
+    // ------------------------ SUBIDA AVATAR RAW ------------------------
     private interface UploadCb { void ok(String url); void fail(String msg); }
 
     private void subirAvatarRaw(Uri uri, UploadCb cb) {
@@ -225,78 +225,59 @@ public class PerfilActivity extends AppCompatActivity {
                 .build();
 
         http.newCall(req).enqueue(new Callback() {
-            @Override public void onFailure(Call call, IOException e) {
-                runOnUiThread(() -> cb.fail(e.getMessage()));
+            @Override public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                requireActivity().runOnUiThread(() -> cb.fail(e.getMessage()));
             }
-            @Override public void onResponse(Call call, Response response) throws IOException {
+            @Override public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 String raw = response.body() != null ? response.body().string() : "";
                 if (!response.isSuccessful()) {
-                    runOnUiThread(() -> cb.fail("HTTP " + response.code() + " — " + (raw.length()>200?raw.substring(0,200):raw)));
+                    requireActivity().runOnUiThread(() ->
+                            cb.fail("HTTP " + response.code() + " — " + (raw.length()>200?raw.substring(0,200):raw)));
                     return;
                 }
-                // Si tu PHP devuelve JSON con {success,url} usa JSON; si devuelve texto, parseamos ruta
                 String url = parseUrlFromPhpResponse(raw);
-                if (url == null) {
-                    // intenta JSON
-                    try {
-                        org.json.JSONObject j = new org.json.JSONObject(raw);
-                        if (j.optBoolean("success", false)) url = j.optString("url", null);
-                    } catch (Exception ignore) {}
-                }
                 final String finalUrl = url != null ? ensureAbsoluteUrl(url) : null;
                 if (finalUrl == null) {
-                    runOnUiThread(() -> cb.fail("Respuesta inesperada: " + raw));
+                    requireActivity().runOnUiThread(() -> cb.fail("Respuesta inesperada: " + raw));
                 } else {
-                    runOnUiThread(() -> cb.ok(finalUrl));
+                    requireActivity().runOnUiThread(() -> cb.ok(finalUrl));
                 }
             }
         });
     }
 
-    private @Nullable String parseUrlFromPhpResponse(String raw) {
-        // Tu script original imprime: "Imagen recibida y guardada correctamente en .../fotos/20251005_153012.jpg"
-        int idx = raw.lastIndexOf("/fotos/");
-        if (idx == -1) return null;
-        String tail = raw.substring(idx + "/fotos/".length());
-        tail = tail.replaceAll("[\\r\\n\\t ]", "");
-        int end = tail.indexOf(".jpg");
-        if (end != -1) return "/fotos/" + tail.substring(0, end + 4);
-        end = tail.indexOf(".jpeg");
-        if (end != -1) return "/fotos/" + tail.substring(0, end + 5);
-        return "/fotos/" + tail;
-    }
-
+    // ------------------------ HELPERS ------------------------
     private String ensureAbsoluteUrl(String returned) {
         if (returned == null) return "";
         if (returned.startsWith("http://") || returned.startsWith("https://")) return returned;
         return "https://devmiasx.com/" + (returned.startsWith("/") ? returned.substring(1) : returned);
     }
 
-    // ------------------------ HELPERS ------------------------
-    private void setLoading(boolean b) {
+    private String safeText(TextInputEditText et) {
+        return et.getText() == null ? "" : et.getText().toString().trim();
+    }
 
+    private void setLoading(boolean b) {
         btnGuardar.setEnabled(!b);
         btnCambiarFoto.setEnabled(!b);
-
         btnLogout.setEnabled(!b);
     }
-    private void toast(String s) { Toast.makeText(this, s, Toast.LENGTH_LONG).show(); }
-    private String safeText(TextInputEditText et) { return et.getText()==null?"":et.getText().toString().trim(); }
 
-    // Comprime a JPG <~1.9MB
+    private void toast(String s) {
+        Toast.makeText(requireContext(), s, Toast.LENGTH_LONG).show();
+    }
+
     private byte[] compressImageUnder2MB(Uri uri) throws IOException {
         final int MAX_BYTES = 1_900_000;
         final int MAX_SIDE  = 1600;
 
-        // bounds
         android.graphics.BitmapFactory.Options bounds = new android.graphics.BitmapFactory.Options();
         bounds.inJustDecodeBounds = true;
-        try (InputStream probe = getContentResolver().openInputStream(uri)) {
+        try (InputStream probe = requireContext().getContentResolver().openInputStream(uri)) {
             android.graphics.BitmapFactory.decodeStream(probe, null, bounds);
         }
-        int w = bounds.outWidth, h = bounds.outHeight;
-        if (w <= 0 || h <= 0) throw new IOException("Imagen inválida");
 
+        int w = bounds.outWidth, h = bounds.outHeight;
         int inSample = 1;
         while (w / inSample > MAX_SIDE || h / inSample > MAX_SIDE) inSample *= 2;
 
@@ -304,47 +285,28 @@ public class PerfilActivity extends AppCompatActivity {
         opts.inSampleSize = inSample;
 
         android.graphics.Bitmap bmp;
-        try (InputStream in = getContentResolver().openInputStream(uri)) {
+        try (InputStream in = requireContext().getContentResolver().openInputStream(uri)) {
             bmp = android.graphics.BitmapFactory.decodeStream(in, null, opts);
         }
-        if (bmp == null) throw new IOException("No se pudo decodificar");
 
-        byte[] data;
-        int quality = 90;
-        do {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bmp.compress(android.graphics.Bitmap.CompressFormat.JPEG, quality, bos);
-            data = bos.toByteArray();
-            quality -= 10;
-        } while (data.length > MAX_BYTES && quality >= 30);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bmp.compress(android.graphics.Bitmap.CompressFormat.JPEG, 85, bos);
+        return bos.toByteArray();
+    }
 
-        while (data.length > MAX_BYTES && (bmp.getWidth() > 800 || bmp.getHeight() > 800)) {
-            int newW = Math.max(800, (int)(bmp.getWidth()  * 0.85f));
-            int newH = Math.max(800, (int)(bmp.getHeight() * 0.85f));
-            android.graphics.Bitmap scaled = android.graphics.Bitmap.createScaledBitmap(bmp, newW, newH, true);
-            bmp.recycle();
-            bmp = scaled;
-
-            int q = Math.min(85, quality + 5);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bmp.compress(android.graphics.Bitmap.CompressFormat.JPEG, q, bos);
-            data = bos.toByteArray();
-
-            while (data.length > MAX_BYTES && q > 30) {
-                bos.reset();
-                q -= 5;
-                bmp.compress(android.graphics.Bitmap.CompressFormat.JPEG, q, bos);
-                data = bos.toByteArray();
-            }
-        }
-        bmp.recycle();
-        return data;
+    private @Nullable String parseUrlFromPhpResponse(String raw) {
+        int idx = raw.lastIndexOf("/fotos/");
+        if (idx == -1) return null;
+        String tail = raw.substring(idx + "/fotos/".length()).replaceAll("[\\r\\n\\t ]", "");
+        int end = tail.indexOf(".jpg");
+        if (end != -1) return "/fotos/" + tail.substring(0, end + 4);
+        return "/fotos/" + tail;
     }
 
     @Nullable
     private String getFileName(Uri uri) {
         if ("content".equals(uri.getScheme())) {
-            try (Cursor c = getContentResolver().query(uri, null, null, null, null)) {
+            try (Cursor c = requireContext().getContentResolver().query(uri, null, null, null, null)) {
                 if (c != null && c.moveToFirst()) {
                     int idx = c.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                     if (idx >= 0) return c.getString(idx);

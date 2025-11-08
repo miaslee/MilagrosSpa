@@ -50,9 +50,9 @@ public class splash extends AppCompatActivity {
 
                         Intent intent;
                         if ("admin".equalsIgnoreCase(rol)) {
-                            intent = new Intent(this, Admin.class);
+                            intent = new Intent(this, adminActivity.class);
                         } else {
-                            intent = new Intent(this, MainActivity.class);
+                            intent = new Intent(this, HomeActivity.class);
                         }
 
                         startActivity(intent);

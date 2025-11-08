@@ -1,25 +1,34 @@
-package com.devmiax.spamilagros;
+package com.devmiax.spamilagros.fragments;
 
-// Imports
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.devmiax.spamilagros.DetalleCita;
+import com.devmiax.spamilagros.R;
+import com.devmiax.spamilagros.misCitas;
+import com.devmiax.spamilagros.servicios;
+import com.devmiax.spamilagros.PerfilActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.*;
-
-import android.widget.TextView;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class MainActivity extends AppCompatActivity {
+public class HomeFragment extends Fragment {
 
     private FirebaseAuth auth;
     private FirebaseFirestore db;
@@ -28,60 +37,74 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvNextTitle, tvNextDetail;
     private MaterialButton btnAgendarDesdeBanner;
 
-    // Mantén referencia a la cita mostrada para abrir detalle
+    // Guardar referencia a la próxima cita
     private String proximaCitaId;
-    private void nav(int viewId, Class<?> target) {
-        View v = findViewById(viewId);
-        if (v != null) v.setOnClickListener(x -> startActivity(new Intent(this, target)));
-    }
 
+    @Nullable
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);  // tu layout existente  :contentReference[oaicite:1]{index=1}
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
-        nav(R.id.btnGoToAgenda,         servicios.class);
-        nav(R.id.btnGoToMyAppointments, misCitas.class);
-        nav(R.id.btnGoToServicios,      servicios.class);
-        nav(R.id.btnGoToPerfil,         PerfilActivity.class);
-        nav(R.id.btnAgendarDesdeBanner, servicios.class); // banner opcional
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-
+        // Inicializar Firebase
         auth = FirebaseAuth.getInstance();
-        db   = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
 
-        // Bind views (IDs del XML)
-        MaterialToolbar toolbar = findViewById(R.id.topAppBar);
-        setSupportActionBar(toolbar);
+        // Bind de vistas
 
-        cardNextAppointment   = findViewById(R.id.cardNextAppointment);
-        tvNextTitle           = findViewById(R.id.tvNextTitle);
-        tvNextDetail          = findViewById(R.id.tvNextDetail);
-        btnAgendarDesdeBanner = findViewById(R.id.btnAgendarDesdeBanner);
+        cardNextAppointment = view.findViewById(R.id.cardNextAppointment);
+        tvNextTitle = view.findViewById(R.id.tvNextTitle);
+        tvNextDetail = view.findViewById(R.id.tvNextDetail);
+        btnAgendarDesdeBanner = view.findViewById(R.id.btnAgendarDesdeBanner);
 
-        // Tocar el banner → Detalle (si hay cita cargada)
+        // Botones
+        nav(view, R.id.btnGoToAgenda, servicios.class);
+        nav(view, R.id.btnGoToMyAppointments, misCitas.class);
+        nav(view, R.id.btnGoToServicios, servicios.class);
+        nav(view, R.id.btnGoToPerfil, PerfilActivity.class);
+
+        btnAgendarDesdeBanner.setOnClickListener(v -> {
+            // Cambiar al fragmento de Servicios
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, new ServiciosFragment())
+                    .addToBackStack(null)
+                    .commit();
+
+            // Marcar el ítem de Servicios en el BottomNavigationView
+            BottomNavigationView navView = requireActivity().findViewById(R.id.bottom_navigation);
+            if (navView != null) {
+                navView.setSelectedItemId(R.id.nav_servicios);
+            }
+        });
+
+
+        // Click en el banner
         cardNextAppointment.setOnClickListener(v -> {
             if (proximaCitaId != null) {
-                Intent i = new Intent(this, DetalleCita.class);
+                Intent i = new Intent(requireContext(), DetalleCita.class);
                 i.putExtra("citaId", proximaCitaId);
                 startActivity(i);
             }
         });
 
-        // CTA "Agendar ahora" → abre servicios/agenda
-        btnAgendarDesdeBanner.setOnClickListener(v -> {
-            startActivity(new Intent(this, servicios.class));
-        });
-
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
+        // Cargar próxima cita
         cargarProximaCita();
+
+        return view;
     }
 
+    private void nav(View parent, int viewId, Class<?> target) {
+        View v = parent.findViewById(viewId);
+        if (v != null) {
+            v.setOnClickListener(x ->
+                    startActivity(new Intent(requireContext(), target))
+            );
+        }
+    }
+
+    // ====================== CARGA DE PRÓXIMA CITA ======================
     private void cargarProximaCita() {
         var user = auth.getCurrentUser();
         if (user == null) {
@@ -89,12 +112,10 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // --------- Estrategia A: si tus documentos de 'citas' tienen un Timestamp 'startAt' ---------
-        // Recomendado: guardar 'startAt' al crear la cita (fecha+hora como Timestamp).
         Timestamp ahora = Timestamp.now();
         db.collection("citas")
                 .whereEqualTo("uidCliente", user.getUid())
-                .whereGreaterThanOrEqualTo("startAt", ahora) // <-- usa startAt si existe
+                .whereGreaterThanOrEqualTo("startAt", ahora)
                 .orderBy("startAt", Query.Direction.ASCENDING)
                 .limit(1)
                 .get()
@@ -103,29 +124,28 @@ public class MainActivity extends AppCompatActivity {
                         DocumentSnapshot d = snap.getDocuments().get(0);
                         renderBannerConCita(d);
                     } else {
-                        // --------- Estrategia B (fallback): sin startAt, usar fecha/hora (String) ---------
                         cargarProximaCitaSinStartAt(user.getUid());
                     }
                 })
-                .addOnFailureListener(e -> {
-                    // Si falla (ej. índice faltante), usamos fallback
-                    cargarProximaCitaSinStartAt(user.getUid());
-                });
+                .addOnFailureListener(e -> cargarProximaCitaSinStartAt(user.getUid()));
     }
 
     private void cargarProximaCitaSinStartAt(String uid) {
         db.collection("citas")
                 .whereEqualTo("uidCliente", uid)
                 .orderBy("fecha", Query.Direction.ASCENDING)
-                .orderBy("hora",  Query.Direction.ASCENDING)
-                .limit(20) // trae unas cuantas y filtramos en cliente
+                .orderBy("hora", Query.Direction.ASCENDING)
+                .limit(20)
                 .get()
                 .addOnSuccessListener(snap -> {
                     DocumentSnapshot futura = null;
                     for (DocumentSnapshot d : snap) {
                         String f = d.getString("fecha");
                         String h = d.getString("hora");
-                        if (compareWithNowLima(f, h) >= 0) { futura = d; break; }
+                        if (compareWithNowLima(f, h) >= 0) {
+                            futura = d;
+                            break;
+                        }
                     }
                     if (futura != null) renderBannerConCita(futura);
                     else mostrarSinProximaCita();
@@ -137,18 +157,15 @@ public class MainActivity extends AppCompatActivity {
         proximaCitaId = d.getId();
 
         String servicioId = d.getString("servicioId");
-        String staffId    = d.getString("staffId");
-        String fecha      = d.getString("fecha");  // "YYYY-MM-DD"
-        String hora       = d.getString("hora");   // "HH:mm"
+        String staffId = d.getString("staffId");
+        String fecha = d.getString("fecha");
+        String hora = d.getString("hora");
 
-        tvNextTitle.setText("Tu próxima cita"); // ya lo tienes en el XML, lo reafirmamos
-
-        // Texto base: Fecha • Hora
+        tvNextTitle.setText("Tu próxima cita");
         String fechaBonita = formatFechaHoraBonita(fecha, hora);
 
-        // Cargamos nombre de servicio y del staff (si existen)
-        final String[] nombreServicio = { null };
-        final String[] nombreStaff    = { null };
+        final String[] nombreServicio = {null};
+        final String[] nombreStaff = {null};
 
         List<Runnable> rendersPendientes = new ArrayList<>();
 
@@ -171,15 +188,14 @@ public class MainActivity extends AppCompatActivity {
             );
         }
 
-        // Primer render (sin esperar a nombres)
+        // Render inicial
         actualizarDetalle(fechaBonita, null, null);
 
-        // Dispara fetchs
+        // Ejecutar consultas
         for (Runnable r : rendersPendientes) r.run();
     }
 
     private void actualizarDetalle(String fechaBonita, @Nullable String serv, @Nullable String staff) {
-        // Ejemplo: "Mar 07 Oct • 10:30\nFacial Premium • Con Ana"
         StringBuilder sb = new StringBuilder();
         sb.append(fechaBonita);
         if (serv != null && !serv.isEmpty()) {
@@ -198,15 +214,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // ================= Helpers de tiempo (America/Lima) =================
-
     private int compareWithNowLima(String fecha, String hora) {
         try {
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
             fmt.setTimeZone(TimeZone.getTimeZone("America/Lima"));
             Date dt = fmt.parse(fecha + " " + hora);
             Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Lima"));
-            return dt.compareTo(now.getTime()); // <0 pasada, >=0 futura
-        } catch (Exception e) { return 0; }
+            return dt.compareTo(now.getTime());
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     private String formatFechaHoraBonita(String fecha, String hora) {
@@ -214,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
             SimpleDateFormat in = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
             in.setTimeZone(TimeZone.getTimeZone("America/Lima"));
             Date d = in.parse(fecha + " " + hora);
-            SimpleDateFormat out = new SimpleDateFormat("EEE dd MMM • HH:mm", new Locale("es","PE"));
+            SimpleDateFormat out = new SimpleDateFormat("EEE dd MMM • HH:mm", new Locale("es", "PE"));
             out.setTimeZone(TimeZone.getTimeZone("America/Lima"));
             return out.format(d);
         } catch (Exception e) {

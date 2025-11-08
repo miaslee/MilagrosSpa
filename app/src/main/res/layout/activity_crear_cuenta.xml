@@ -52,7 +52,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilName"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        android:hint="Nombres"
+                        android:hint="Nombre y apellido"
                         app:boxBackgroundMode="outline"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -70,26 +70,7 @@
                             android:maxLines="1" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilLasName"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        android:hint="apellidos"
-                        app:boxBackgroundMode="outline"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:startIconDrawable="@drawable/ic_user_24"
-                        app:boxCornerRadiusTopStart="14dp"
-                        app:boxCornerRadiusTopEnd="14dp"
-                        app:boxCornerRadiusBottomStart="14dp"
-                        app:boxCornerRadiusBottomEnd="14dp">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/LastName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textPersonName"
-                            android:maxLines="1" />
-                    </com.google.android.material.textfield.TextInputLayout>
 
 
                     <!-- Correo -->
@@ -123,7 +104,7 @@
                         android:id="@+id/tilPhone"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_marginTop="12dp"
-                        android:hint="Teléfono (opcional)"
+                        android:hint="Teléfono"
                         app:boxBackgroundMode="outline"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -190,33 +171,8 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <!-- Términos -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginTop="10dp">
-
-                        <CheckBox
-                            android:id="@+id/checkTerms"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                        <TextView
-                            android:id="@+id/tvTerms"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:text="Acepto los términos y condiciones" />
-                    </LinearLayout>
 
                     <!-- Ver términos (opcional) -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnViewTerms"
-                        style="@style/Widget.Material3.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Ver términos" />
 
                     <!-- Botón principal -->
                     <com.google.android.material.button.MaterialButton

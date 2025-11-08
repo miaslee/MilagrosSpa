@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/outline_add_home_work_24"
+        android:title="Inicio" />
+
+    <item
+        android:id="@+id/nav_servicios"
+        android:icon="@drawable/ic_calendar_24"
+        android:title="Servicios" />
+
+    <item
+        android:id="@+id/nav_misCitas"
+        android:icon="@drawable/ic_menu_24"
+        android:title="Mis Citas" />
+
+    <item
+        android:id="@+id/nav_notifications"
+        android:icon="@drawable/ic_bell_24"
+        android:title="Notificaciones" />
+
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_person_24"
+        android:title="Perfil" />
+
+</menu>
